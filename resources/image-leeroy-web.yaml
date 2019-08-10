@@ -1,0 +1,9 @@
+apiVersion: tekton.dev/v1alpha1
+kind: PipelineResource
+metadata:
+  name: skaffold-image-leeroy-web
+spec:
+  type: image
+  params:
+  - name: url
+    value: gcr.io/GCP_PROJECT/leeroy-web
