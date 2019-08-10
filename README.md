@@ -178,3 +178,74 @@ The inputs and outputs of `Tasks` are `PipelineResources`. There are a few types
     NAME
     gcr.io/vic-tekton-1/leeroy-web
     ```
+
+Now we are getting some real work done!
+
+We were able to create a task that took a git repostiory as
+an input and created a Docker image as its output. Then we created `PipelineResources` for the specific
+repository and image that we wanted to build and mapped them to our `Task` using a `TaskRun`.
+
+
+## Stringing tasks together with a `Pipeline`
+
+Pipelines allow you to execute tasks in order and pass the ouptut of one to the input of the other.
+In this part of the tutorial, you'll create a `Pipeline` that takes the output of our image build `Task`
+and deploys it to our cluster. 
+
+1. First, you'll need to give the pods that Tekton is creating the ability to deploy into the `default`
+   namespace. Since we installed Tekton using the default configuration it will be deploying pods using 
+   the default Kubernetes service account in the default namespace.
+
+   ```
+   kubectl create rolebinding --serviceaccount default:default --clusterrole admin default-admin
+   ```
+
+1. Lets create the `Task` that deploys to our cluster using `kubectl`.
+
+    ```
+    kubectl apply -f tasks/deploy-using-kubectl
+    ```
+
+1. Next, you'll create the `Pipeline` that takes the output of the image build and uses it as a parameter
+   for the deployment `Task`.
+
+   ```
+   kubectl apply -f pipelines/tutorial-pipeline.yaml
+   ```
+
+1. Again you'll notice nothing happens when we created those resources. We need to create a `PipelineRun`
+   to execute our `Pipeline`. The `PipelineRun` maps sets the parameters for our `Pipeline`. 
+
+    ```
+    kubectl apply -f pipelineruns/tutorial-pipeline-run-1.yaml
+    ```
+
+1. Check that PipelineRuns suceeded using `kubectl`.
+
+    ```
+    kubectl get pipelineruns
+    ```
+
+1. You can also take a look using the `tkn` CLI.
+
+    ```
+    tkn pipelinerun list
+    ```
+Congrats! You've run your first pipeline successfully.
+
+1. Let's make sure our web app was deployed.
+
+    ```
+     $  kubectl logs -l app=leeroy-web
+    2019/08/10 22:42:00 leeroy web server ready 
+    ```
+
+W00t!!11!!1!
+
+# Conclusion
+
+What have we built?
+
+ * A task that can clone a Git repository and build a Docker image from it.
+ * A task that can replace an image path in a Kubernetes YAML and then replace it
+ * A parameterized pipeline that strings together our tasks and can be reused for many projects.
