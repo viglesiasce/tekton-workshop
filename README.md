@@ -3,6 +3,15 @@ Based on https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md
 
 # Tekton Workshop
 
+## Clone the workshop code
+
+1. Clone the sample code from GitHub.
+
+    ```
+    git clone https://github.com/viglesiasce/tekton-workshop
+    cd tekton-workshop
+    ```
+
 ## Create a Service Account for your pipelines to use
 
 1. Create the GCP service account
@@ -37,8 +46,9 @@ Based on https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md
     ```shell
     gcloud config set compute/zone us-east1-d
     export GCP_PROJECT=$(gcloud config get-value project)
-    gcloud container clusters create tekton-workshop --service-account tekton@${GCP_PROJECT}.iam.gserviceaccount.com \
-                                    --scopes cloud-platform
+    gcloud container clusters create tekton-workshop \
+          --service-account tekton@${GCP_PROJECT}.iam.gserviceaccount.com \
+          --scopes cloud-platform
     ```
 
 ## Installation
@@ -47,33 +57,34 @@ Based on https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md
 
 1. Install Tekton into your cluster.
 
-```
-kubectl apply --filename https://storage.googleapis.com/tekton-releases/latest/release.yaml
-```
+    ```
+    kubectl apply --filename https://storage.googleapis.com/tekton-releases/latest/release.yaml
+    ```
 
 ### `tkn` CLI
 
 1. Install the `tkn` CLI into your Cloud Shell.
 
-```
-curl -LO https://github.com/tektoncd/cli/releases/download/v0.2.0/tkn_0.2.0_Linux_x86_64.tar.gz
-sudo tar xvzf tkn_0.2.0_Linux_x86_64.tar.gz -C /usr/local/bin/ tkn
-```
+    ```
+    curl -LO https://github.com/tektoncd/cli/releases/download/v0.2.0/tkn_0.2.0_Linux_x86_64.tar.gz
+    sudo tar xvzf tkn_0.2.0_Linux_x86_64.tar.gz -C /usr/local/bin/ tkn
+    ```
 
 ### Installing Tekton Dashboard
 
 1. Install the Tekton Dashboard to visualize your Tekton pipelines.
 
-```
-kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.1.0/release.yaml
-```
+    ```
+    kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download/v0.1.0/release.yaml
+    ```
 
 ## Hello World!
 
 
 ### Creating and running a task
 
-1. First you'll create a task definition. In this case the task will echo "Hello Tekton Workshop!". Note that the task step spec is a normal Kubernetes [Pod Spec definition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.15/#podspec-v1-core).
+1. First you'll create a task definition. In this case the task will echo "Hello Tekton Workshop!". 
+   Note that the task step spec is a normal Kubernetes [Pod Spec definition](https://kubernetes.io/docs/reference/generated/kubernetes-api/v1.15/#podspec-v1-core).
 
     ```
     kubectl apply -f tasks/hello-world.yaml
@@ -85,7 +96,7 @@ kubectl apply --filename https://github.com/tektoncd/dashboard/releases/download
     kubectl get pods
     ```
 
-1. Apply the TaskRun in your cluster
+1. Apply the TaskRun in your cluster.
 
     ```
     kubectl apply -f taskruns/hello-world.yaml
@@ -146,4 +157,24 @@ The inputs and outputs of `Tasks` are `PipelineResources`. There are a few types
 
     ```
     kubectl apply -f taskruns/leeroy-web-image-build.yaml
+    ```
+
+1. Now we can look at the logs from our iamge build job.
+
+    ```
+    kubectl logs -l tekton.dev/task=build-docker-image-from-git-source -c step-build-and-push
+    ```
+
+1. Once the task is complete we can look for our image in the registry.
+
+    ```
+    $  kubectl get pods
+    NAME                                                     READY   STATUS      RESTARTS   AGE
+    build-docker-image-from-git-source-task-run-pod-aaeab8   0/3     Completed   0          107s
+    ```
+
+    ```
+    $  gcloud container images list
+    NAME
+    gcr.io/vic-tekton-1/leeroy-web
     ```
