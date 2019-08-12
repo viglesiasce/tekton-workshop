@@ -203,7 +203,7 @@ and deploys it to our cluster.
 1. Lets create the `Task` that deploys to our cluster using `kubectl`.
 
     ```
-    kubectl apply -f tasks/deploy-using-kubectl
+    kubectl apply -f tasks/deploy-using-kubectl.yaml
     ```
 
 1. Next, you'll create the `Pipeline` that takes the output of the image build and uses it as a parameter
