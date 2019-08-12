@@ -159,7 +159,7 @@ The inputs and outputs of `Tasks` are `PipelineResources`. There are a few types
     kubectl apply -f taskruns/leeroy-web-image-build.yaml
     ```
 
-1. Now we can look at the logs from our iamge build job.
+1. Now we can look at the logs from our image build job.
 
     ```
     kubectl logs -l tekton.dev/task=build-docker-image-from-git-source -c step-build-and-push
@@ -203,7 +203,7 @@ and deploys it to our cluster.
 1. Lets create the `Task` that deploys to our cluster using `kubectl`.
 
     ```
-    kubectl apply -f tasks/deploy-using-kubectl
+    kubectl apply -f tasks/deploy-using-kubectl.yaml
     ```
 
 1. Next, you'll create the `Pipeline` that takes the output of the image build and uses it as a parameter
