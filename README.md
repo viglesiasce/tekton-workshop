@@ -242,6 +242,36 @@ Congrats! You've run your first pipeline successfully.
 
 W00t!!11!!1!
 
+
+## Exploring Tekton via the Dashboard
+
+1. First set up port-forwarding to the Tekton Dashoard from you Cloud Shell environment.
+
+    ```
+    export TEKTON_POD=$(kubectl get pods -n tekton-pipelines -o jsonpath="{.items[0].metadata.name}" -l app=tekton-dashboard)
+    kubectl port-forward --namespace tekton-pipelines $TEKTON_POD 8080:9097 >> /dev/null &
+    ```
+    
+1. To open the Tekton Dashboard, click Web Preview in Cloud Shell and click Preview on port 8080.
+
+    ![web preview ui](images/web-preview.png)
+    
+1. When the UI opens, you may see an error due to the URL being malformed. Change the URL by removing `?authuser=0` and then reload the page.
+
+1. Now you can click around to see the Pipelines, Tasks, etc that we've created in this tutorial.
+
+1. Click the "Pipelines" button on the left and then the "tutorial-pipeline" link.
+
+    ![pipelines nav](images/pipelines-nav.png)
+
+1. Now click the "Create PipelineRun" button and set the `skaffold-git` repo, `skaffold-image-leeroy-web` image, and `default` service account. Once those fields have been filled in, click the blue "Create PipelineRun".
+
+    ![create-pipeline-run](images/create-pipeline-run.png)
+    
+1. You can now view your pipeline run in the UI by clicking the link in the green notification box.
+
+    ![pipeline-detail-link](images/pipeline-detail-link.png)
+
 # Conclusion
 
 What have we built?
