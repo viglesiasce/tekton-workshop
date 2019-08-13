@@ -48,7 +48,8 @@ Based on https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md
     export GCP_PROJECT=$(gcloud config get-value project)
     gcloud container clusters create tekton-workshop \
           --service-account tekton@${GCP_PROJECT}.iam.gserviceaccount.com \
-          --scopes cloud-platform
+          --scopes cloud-platform \
+          --machine-type n1-standard-2
     ```
 
 ## Installation
