@@ -1,5 +1,7 @@
+[Workshop Slides](https://docs.google.com/presentation/d/e/2PACX-1vQBnNkuLtLbdB8RRoObjqScRLWW2c4DR-hHfJamGvrbQOqewxikyyCHsIzB_bQf9gHW73UVcY1LP7Nk/pub)
 
-Based on https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md
+Based on [this tutorial](https://github.com/tektoncd/pipeline/blob/master/docs/tutorial.md)
+
 
 # Tekton Workshop
 
